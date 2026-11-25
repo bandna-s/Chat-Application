@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZynkChat - Code Snippet Modal</title>
+  <link rel="stylesheet" href="assets/css/themes.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Send Code Snippet &lt;/&gt;</h3>
+        <a href="dashboard.html" class="tiny-close-btn" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">✕</a>
+      </div>
+      <div class="modal-body">
+        <select id="standaloneCodeLang" class="form-input">
+          <option value="JavaScript">JavaScript</option>
+          <option value="HTML">HTML</option>
+          <option value="CSS">CSS</option>
+          <option value="Python">Python</option>
+          <option value="Java">Java</option>
+          <option value="SQL">SQL</option>
+        </select>
+        <textarea id="standaloneCodeInput" class="form-input" rows="7" style="font-family:Consolas,monospace;" placeholder="Write or paste code snippet..."></textarea>
+        <a href="dashboard.html" class="primary-btn full-width" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;">Return to Dashboard</a>
+      </div>
+    </div>
+  </div>
+  <script src="assets/js/storage.js"></script>
+</body>
+</html>

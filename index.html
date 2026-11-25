@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZynkChat - Sign In & Register</title>
+  <link rel="stylesheet" href="assets/css/themes.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-app);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-title {
+      font-size: 20px;
+    }
+
+    .auth-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .auth-heading {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: var(--bg-input);
+      padding: 5px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+    }
+
+    .auth-tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+
+    .auth-tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--accent-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 11px 13px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-primary);
+      background: var(--bg-surface);
+    }
+
+    .form-input.input-error {
+      border-color: var(--danger);
+    }
+
+    .field-error {
+      display: none;
+      margin-top: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--danger);
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
+    .form-banner-error {
+      display: none;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--danger);
+      background: rgba(220, 38, 38, 0.1);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+
+    .form-banner-error.visible {
+      display: block;
+    }
+    .form-banner-success {
+      display: none;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--success);
+      background: rgba(22, 163, 74, 0.12);
+      border: 1px solid rgba(22, 163, 74, 0.35);
+    }
+
+    .form-banner-success.visible {
+      display: block;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: var(--accent-primary);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .submit-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .hidden-form {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .auth-topbar {
+        padding: 14px 16px;
+      }
+
+      .auth-card {
+        padding: 22px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="auth-topbar">
+    <div class="brand-shimmer brand-title">
+      <img src="assets/images/zynk-logo.png" alt="ZynkChat Logo" class="zynk-logo-img" />
+      <span class="zynk-text">ZynkChat</span>
+    </div>
+
+    <button id="themeToggleBtn" class="theme-pill-toggle" type="button" aria-label="Toggle Theme">
+  <span class="toggle-icon">☀</span>
+  <span class="toggle-thumb"></span>
+</button>
+  </header>
+
+  <main class="auth-wrapper">
+    <section class="auth-card">
+      <h1 id="authHeading" class="auth-heading">Welcome back</h1>
+      <p id="authSubtitle" class="auth-subtitle">Sign in with your account to access your workspace chats.</p>
+
+      <div class="auth-tabs">
+        <button id="showLoginTab" class="auth-tab-btn active" type="button">Login</button>
+        <button id="showSignupTab" class="auth-tab-btn" type="button">Register</button>
+      </div>
+
+      <div id="authBannerError" class="form-banner-error"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginIdentifier" class="form-label">Email or Username</label>
+          <input id="loginIdentifier" type="text" class="form-input" placeholder="Enter email or username" />
+          <span id="loginIdentifierError" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword" class="form-label">Password</label>
+          <input id="loginPassword" type="password" class="form-input" placeholder="Enter your password" />
+          <span id="loginPasswordError" class="field-error"></span>
+        </div>
+
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+
+      <form id="signupForm" class="hidden-form" novalidate>
+        <div class="form-group">
+          <label for="signupName" class="form-label">Full Name</label>
+          <input id="signupName" type="text" class="form-input" placeholder="Enter your full name" />
+          <span id="signupNameError" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="signupUsername" class="form-label">Username</label>
+          <input id="signupUsername" type="text" class="form-input" placeholder="Choose a unique username" />
+          <span id="signupUsernameError" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="signupEmail" class="form-label">Email Address</label>
+          <input id="signupEmail" type="email" class="form-input" placeholder="Enter valid email address" />
+          <span id="signupEmailError" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="signupPassword" class="form-label">Password</label>
+          <input id="signupPassword" type="password" class="form-input" placeholder="At least 6 characters" />
+          <span id="signupPasswordError" class="field-error"></span>
+        </div>
+
+        <button type="submit" class="submit-btn">Create Account</button>
+      </form>
+
+    </section>
+  </main>
+
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById("themeToggleBtn");
+      var saved = localStorage.getItem("zynk_theme_v1") || "light";
+      document.documentElement.setAttribute("data-theme", saved);
+
+      function syncLoginThemeIcon(theme) {
+        if (!btn) return;
+        var icon = btn.querySelector(".toggle-icon");
+        if (icon) icon.textContent = theme === "dark" ? "☾" : "☀";
+      }
+
+      syncLoginThemeIcon(saved);
+      if (!btn) return;
+
+      btn.addEventListener("click", function () {
+        setTimeout(function () {
+          var current = document.documentElement.getAttribute("data-theme") || "light";
+          syncLoginThemeIcon(current);
+        }, 20);
+      });
+    })();
+  </script>
+</body>
+</html>

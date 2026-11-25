@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZynkChat - Workspace</title>
+  <link rel="stylesheet" href="assets/css/themes.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div id="appLockOverlay" class="applock-overlay hidden">
+    <div class="applock-card">
+      <div class="brand-shimmer applock-brand">
+        <img src="assets/images/zynk-logo.png" alt="ZynkChat Logo" class="zynk-logo-img" />
+        <span class="zynk-text">ZynkChat Lock</span>
+      </div>
+      <p class="applock-desc">Enter your 4-digit PIN to unlock chats.</p>
+      <input id="appLockInput" type="password" maxlength="4" inputmode="numeric" class="form-input applock-input" placeholder="••••" />
+      <div id="appLockError" class="field-error"></div>
+      <button id="appLockUnlockBtn" type="button" class="primary-btn full-width">Unlock</button>
+    </div>
+  </div>
+
+  <div id="globalLoader" class="global-loader hidden">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="app-shell">
+    <aside id="sidebarPane" class="sidebar-pane">
+      <header class="sidebar-header">
+        <div class="brand-shimmer">
+          <img src="assets/images/zynk-logo.png" alt="ZynkChat Logo" class="zynk-logo-img" />
+          <span class="zynk-text">ZynkChat</span>
+        </div>
+
+        <div class="header-actions">
+         <button id="themeToggleBtn" class="theme-pill-toggle" type="button" aria-label="Toggle Theme">
+  <span class="toggle-icon">☀</span>
+  
+  <span class="toggle-thumb"></span>
+</button>
+
+          <div class="menu-wrapper">
+            <button id="desktopMenuBtn" class="icon-btn desktop-only-btn" type="button" title="Menu">⋮</button>
+            <button id="mobileMenuBtn" class="icon-btn mobile-only-btn" type="button" title="Menu">☰</button>
+
+            <div id="dropdownMenu" class="dropdown-menu hidden">
+              <button id="menuUnreadBtn" class="dropdown-item" type="button">Unread Chats</button>
+              <button id="menuGroupsBtn" class="dropdown-item" type="button">Groups</button>
+              <button id="menuNewGroupBtn" class="dropdown-item" type="button">+ New Group</button>
+              <button id="menuCustomListBtn" class="dropdown-item" type="button">+ Custom List</button>
+              <a href="settings.html" class="dropdown-item dropdown-link">Settings</a>
+              <button id="menuLogoutBtn" class="dropdown-item danger-text" type="button">Logout</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="current-user-strip">
+        <div id="currentUserAvatar" class="avatar-box small-avatar"></div>
+        <div class="current-user-meta">
+          <div id="currentUserName" class="current-user-name">User</div>
+          <div id="currentUserHandle" class="current-user-handle">@handle · Online</div>
+        </div>
+        <a href="settings.html" class="mini-link-btn">Profile</a>
+      </div>
+
+      <div class="search-box-wrap">
+        <input id="contactSearchInput" type="search" class="search-input" placeholder="Search users or groups..." />
+      </div>
+
+      <div id="categoryTabs" class="category-tabs">
+        <button class="tab-btn active" data-filter="all" type="button">All</button>
+        <button class="tab-btn" data-filter="unread" type="button">Unread</button>
+        <button class="tab-btn" data-filter="groups" type="button">Groups</button>
+        <button id="addCustomListTabBtn" class="tab-btn plus-tab" type="button" title="Add Custom List">+</button>
+      </div>
+
+      <div id="customListsBar" class="custom-lists-bar hidden"></div>
+
+      <div id="chatListContainer" class="chat-list-container"></div>
+    </aside>
+
+    <main id="chatPane" class="chat-pane mobile-hidden">
+      <div id="emptyChatState" class="empty-chat-state">
+        <div class="empty-badge">ZynkChat</div>
+        <h2>Select a conversation</h2>
+        <p>Choose a contact or group from the left list to start messaging, use AI tools, or share files.</p>
+      </div>
+
+      <div id="activeChatView" class="active-chat-view hidden">
+        <header id="chatHeader" class="chat-header">
+          <div class="chat-header-left">
+            <button id="mobileBackBtn" class="icon-btn mobile-only-btn" type="button">←</button>
+            <div id="activeChatAvatar" class="avatar-box"></div>
+            <div class="chat-header-info">
+              <div id="activeChatTitle" class="chat-title">Contact Name</div>
+              <div id="activeChatStatus" class="chat-status">Online</div>
+            </div>
+          </div>
+
+         <div class="chat-header-right ai-menu-wrapper">
+            <button id="toggleAiToolsBtn" class="chip-btn" type="button" title="AI Tools & Summary">✨ AI</button>
+            <button id="editNicknameBtn" class="icon-btn" type="button" title="Edit Nickname">✎</button>
+            <button id="blockUserBtn" class="icon-btn" type="button" title="Block User">🚫</button>
+            <button id="reportUserBtn" class="icon-btn" type="button" title="Report User">⚑</button>
+
+            <div id="aiRewriteToolbar" class="ai-popover-panel hidden">
+              <div class="ai-popover-section">
+                <span class="ai-tag">Chat Summary</span>
+                <button id="summarizeChatBtn" class="chip-btn full-width" type="button">Summarize Chat</button>
+              </div>
+              <div class="ai-popover-divider"></div>
+              <div class="ai-popover-section">
+                <span class="ai-tag">AI Tone & Translate</span>
+                <div class="ai-tone-row">
+                  <button id="toneFormalBtn" class="chip-btn" type="button">Make Formal</button>
+                  <button id="toneFriendlyBtn" class="chip-btn" type="button">Make Friendly</button>
+                </div>
+                <div class="ai-translate-row">
+                  <select id="translateLangSelect" class="mini-select">
+                    <option value="hi">Translate: Hindi</option>
+                    <option value="en">Translate: English</option>
+                    <option value="es">Translate: Spanish</option>
+                  </select>
+                  <button id="translateTextBtn" class="chip-btn" type="button">Translate</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div id="summaryBanner" class="summary-banner hidden">
+          <div class="summary-header">
+            <strong>AI 3-Point Chat Summary</strong>
+            <button id="closeSummaryBtn" class="tiny-close-btn" type="button">✕</button>
+          </div>
+          <ul id="summaryList" class="summary-list"></ul>
+        </div>
+
+        <div id="messagesContainer" class="messages-container"></div>
+
+        <div id="quickRepliesBar" class="quick-replies-bar"></div>
+
+
+       <footer class="chat-composer">
+          <div id="attachmentPreviewBar" class="attachment-preview-bar hidden"></div>
+
+          <form id="messageForm" class="composer-form">
+            <div class="composer-pill-box">
+              <input id="messageInput" type="text" class="message-input" placeholder="Type a message or emoji..." autocomplete="off" />
+              <div class="inline-composer-actions">
+                <button id="burnToggleBtn" class="inline-tool-btn" type="button" title="Burn-on-Read 10s Secret">🔥</button>
+                <button id="voiceInputBtn" class="inline-tool-btn" type="button" title="Voice to Text">🎤</button>
+                <button id="openCodeSnippetBtn" class="inline-tool-btn" type="button" title="Code Snippet">&lt;/&gt;</button>
+                <label for="fileAttachInput" class="inline-tool-btn attach-label" title="Attach Image or File">📎</label>
+                <input id="fileAttachInput" type="file" class="hidden" accept="image/*,.pdf,.doc,.docx,.txt,.csv" />
+              </div>
+            </div>
+            <button type="submit" class="send-btn" aria-label="Send Message" title="Send">
+              <svg viewBox="0 0 24 24" class="send-arrow-icon" aria-hidden="true">
+                <path d="M3.4 20.6L21.6 12 3.4 3.4l2.7 7.1 9.4 1.5-9.4 1.5-2.7 7.1z" />
+              </svg>
+            </button>
+          </form>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden">
+    <div id="modalCard" class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Modal Title</h3>
+        <button id="closeModalBtn" class="tiny-close-btn" type="button">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/ai_features.js"></script>
+  <script src="assets/js/voice_code.js"></script>
+  <script src="assets/js/chat.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+  (function () {
+    var btn = document.getElementById("themeToggleBtn");
+    var saved = localStorage.getItem("zynk_theme_v1") || "light";
+    document.documentElement.setAttribute("data-theme", saved);
+
+    function setThemeIcon(theme) {
+      if (!btn) return;
+      var icon = btn.querySelector(".toggle-icon");
+      if (icon) icon.textContent = theme === "dark" ? "☾" : "☀";
+    }
+
+    setThemeIcon(saved);
+    if (!btn) return;
+
+    btn.onclick = function (e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      var current = document.documentElement.getAttribute("data-theme") || "light";
+      var next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("zynk_theme_v1", next);
+      setThemeIcon(next);
+    };
+  })();
+</script>
+</body>
+</html>

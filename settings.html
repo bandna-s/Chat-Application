@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZynkChat - Account & Chat Settings</title>
+  <link rel="stylesheet" href="assets/css/themes.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-app);
+      color: var(--text-primary);
+    }
+
+    .settings-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: var(--text-primary);
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .settings-container {
+      max-width: 780px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .settings-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 18px;
+    }
+
+    .dp-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .dp-preview {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .dp-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dp-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-primary);
+      background: var(--bg-surface);
+    }
+
+    .field-error {
+      display: none;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--danger);
+      margin-top: 5px;
+    }
+
+    .field-error.visible {
+      display: block;
+    }
+
+    .status-msg {
+      display: none;
+      margin-top: 10px;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(22, 163, 74, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(22, 163, 74, 0.3);
+    }
+
+    .status-msg.visible {
+      display: block;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg-input);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .wallpaper-presets {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .wp-swatch {
+      height: 58px;
+      border-radius: 10px;
+      border: 2px solid var(--border-color);
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .wp-swatch.selected {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      .grid-two {
+        grid-template-columns: 1fr;
+      }
+
+      .settings-topbar {
+        padding: 12px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="settings-topbar">
+    <div class="topbar-left">
+      <a href="dashboard.html" class="back-link">← Back to Chats</a>
+      <div class="brand-shimmer">
+        <div class="brand-shimmer">
+        <img src="assets/images/zynk-logo.png" alt="ZynkChat Logo" class="zynk-logo-img" />
+        <span class="zynk-text">ZynkChat Settings</span>
+      </div>
+        
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <button id="themeToggleBtn" class="theme-pill-toggle" type="button" aria-label="Toggle Theme">
+  <span class="toggle-icon">☀</span>
+  <span class="toggle-thumb"></span>
+</button>
+      <button id="settingsLogoutBtn" type="button" class="btn btn-danger">Logout</button>
+    </div>
+  </header>
+
+  <main class="settings-container">
+    <section class="settings-card">
+      <h2 class="card-title">Profile & Account Details</h2>
+      <p class="card-sub">Update your profile picture, display name, username, email, or password.</p>
+
+      <div class="dp-row">
+        <div id="dpPreviewBox" class="dp-preview"></div>
+        <div class="dp-actions">
+          <label for="dpFileInput" class="btn btn-primary">Upload DP Photo</label>
+          <input id="dpFileInput" type="file" accept="image/*" class="hidden" />
+          <button id="removeDpBtn" type="button" class="btn btn-secondary">Remove DP</button>
+        </div>
+      </div>
+
+      <form id="profileForm" novalidate>
+        <div class="grid-two">
+          <div class="form-group">
+            <label for="setFullName" class="form-label">Full Name</label>
+            <input id="setFullName" type="text" class="form-input" />
+            <div id="setFullNameError" class="field-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="setUsername" class="form-label">Username</label>
+            <input id="setUsername" type="text" class="form-input" />
+            <div id="setUsernameError" class="field-error"></div>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="form-group">
+            <label for="setEmail" class="form-label">Email Address</label>
+            <input id="setEmail" type="email" class="form-input" />
+            <div id="setEmailError" class="field-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="setPassword" class="form-label">Password</label>
+            <input id="setPassword" type="text" class="form-input" />
+            <div id="setPasswordError" class="field-error"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+        <div id="profileSavedMsg" class="status-msg"></div>
+      </form>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="card-title">Chat Background Wallpaper</h2>
+      <p class="card-sub">Choose a preset color/gradient or upload an image from your device.</p>
+
+      <div id="wallpaperPresets" class="wallpaper-presets"></div>
+
+      <div class="dp-actions">
+        <label for="wallpaperFileInput" class="btn btn-primary">Upload Custom Image</label>
+        <input id="wallpaperFileInput" type="file" accept="image/*" class="hidden" />
+        <button id="resetWallpaperBtn" type="button" class="btn btn-secondary">Reset Default</button>
+      </div>
+      <div id="wallpaperSavedMsg" class="status-msg"></div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="card-title">AppLock Security (4-Digit PIN)</h2>
+      <p class="card-sub">Protect your chat dashboard with a 4-digit numeric PIN.</p>
+
+      <div class="grid-two">
+        <div class="form-group">
+          <label for="appLockPinInput" class="form-label">4-Digit PIN</label>
+          <input id="appLockPinInput" type="password" maxlength="4" inputmode="numeric" class="form-input" placeholder="e.g. 1234" />
+          <div id="appLockPinError" class="field-error"></div>
+        </div>
+      </div>
+
+      <div class="dp-actions">
+        <button id="savePinBtn" type="button" class="btn btn-primary">Enable / Update PIN</button>
+        <button id="disablePinBtn" type="button" class="btn btn-secondary">Disable PIN</button>
+      </div>
+      <div id="pinSavedMsg" class="status-msg"></div>
+    </section>
+  </main>
+
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const currentUser = ZynkAuth.requireAuth();
+      if (!currentUser) return;
+
+      ZynkAuth.bindThemeToggle("themeToggleBtn");
+
+      const dpPreviewBox = document.getElementById("dpPreviewBox");
+      const dpFileInput = document.getElementById("dpFileInput");
+      const removeDpBtn = document.getElementById("removeDpBtn");
+
+      const profileForm = document.getElementById("profileForm");
+      const setFullName = document.getElementById("setFullName");
+      const setUsername = document.getElementById("setUsername");
+      const setEmail = document.getElementById("setEmail");
+      const setPassword = document.getElementById("setPassword");
+
+      const setFullNameError = document.getElementById("setFullNameError");
+      const setUsernameError = document.getElementById("setUsernameError");
+      const setEmailError = document.getElementById("setEmailError");
+      const setPasswordError = document.getElementById("setPasswordError");
+      const profileSavedMsg = document.getElementById("profileSavedMsg");
+
+      const wallpaperPresets = document.getElementById("wallpaperPresets");
+      const wallpaperFileInput = document.getElementById("wallpaperFileInput");
+      const resetWallpaperBtn = document.getElementById("resetWallpaperBtn");
+      const wallpaperSavedMsg = document.getElementById("wallpaperSavedMsg");
+
+      const appLockPinInput = document.getElementById("appLockPinInput");
+      const appLockPinError = document.getElementById("appLockPinError");
+      const savePinBtn = document.getElementById("savePinBtn");
+      const disablePinBtn = document.getElementById("disablePinBtn");
+      const pinSavedMsg = document.getElementById("pinSavedMsg");
+
+      function showSavedBanner(el, text) {
+        el.textContent = text;
+        el.classList.add("visible");
+        setTimeout(() => el.classList.remove("visible"), 2600);
+      }
+
+      function renderDpPreview() {
+        const fresh = ZynkStorage.getUserById(currentUser.user_id) || currentUser;
+        dpPreviewBox.innerHTML = "";
+        if (fresh.profile_pic) {
+          const img = document.createElement("img");
+          img.src = fresh.profile_pic;
+          img.alt = fresh.name;
+          dpPreviewBox.appendChild(img);
+        } else {
+          const parts = (fresh.name || "U").trim().split(/\s+/);
+          dpPreviewBox.textContent = parts.length > 1
+            ? (parts[0][0] + parts[1][0]).toUpperCase()
+            : parts[0].slice(0, 2).toUpperCase();
+        }
+      }
+
+      function loadUserFields() {
+        const fresh = ZynkStorage.getUserById(currentUser.user_id) || currentUser;
+        setFullName.value = fresh.name;
+        setUsername.value = fresh.username;
+        setEmail.value = fresh.email;
+        setPassword.value = fresh.password;
+        appLockPinInput.value = fresh.app_lock_pin || "";
+        renderDpPreview();
+      }
+
+      dpFileInput.addEventListener("change", () => {
+        const file = dpFileInput.files && dpFileInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          ZynkStorage.updateUser(currentUser.user_id, { profile_pic: reader.result });
+          renderDpPreview();
+          showSavedBanner(profileSavedMsg, "Profile picture updated!");
+        };
+        reader.readAsDataURL(file);
+      });
+
+      removeDpBtn.addEventListener("click", () => {
+        ZynkStorage.updateUser(currentUser.user_id, { profile_pic: "" });
+        renderDpPreview();
+        showSavedBanner(profileSavedMsg, "Profile picture removed. Initials avatar active.");
+      });
+
+      profileForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        ZynkAuth.setFieldError(setFullName, setFullNameError, "");
+        ZynkAuth.setFieldError(setUsername, setUsernameError, "");
+        ZynkAuth.setFieldError(setEmail, setEmailError, "");
+        ZynkAuth.setFieldError(setPassword, setPasswordError, "");
+
+        const nameVal = setFullName.value.trim();
+        const userVal = setUsername.value.trim().toLowerCase();
+        const emailVal = setEmail.value.trim().toLowerCase();
+        const passVal = setPassword.value;
+        let hasErr = false;
+
+        if (!nameVal || nameVal.length < 2) {
+          ZynkAuth.setFieldError(setFullName, setFullNameError, "Full name must be at least 2 characters.");
+          hasErr = true;
+        }
+        if (!ZynkAuth.isValidUsername(userVal)) {
+          ZynkAuth.setFieldError(setUsername, setUsernameError, "Use 3-20 letters, numbers, or underscores.");
+          hasErr = true;
+        }
+        if (!ZynkAuth.isValidEmail(emailVal)) {
+          ZynkAuth.setFieldError(setEmail, setEmailError, "Enter a valid email address.");
+          hasErr = true;
+        }
+        if (!passVal || passVal.length < 6) {
+          ZynkAuth.setFieldError(setPassword, setPasswordError, "Password must be at least 6 characters.");
+          hasErr = true;
+        }
+        if (hasErr) return;
+
+        const allUsers = ZynkStorage.getUsers();
+        if (allUsers.some((u) => u.user_id !== currentUser.user_id && u.username.toLowerCase() === userVal)) {
+          ZynkAuth.setFieldError(setUsername, setUsernameError, "Username is already taken.");
+          return;
+        }
+        if (allUsers.some((u) => u.user_id !== currentUser.user_id && u.email.toLowerCase() === emailVal)) {
+          ZynkAuth.setFieldError(setEmail, setEmailError, "Email is already registered.");
+          return;
+        }
+
+        ZynkStorage.updateUser(currentUser.user_id, {
+          name: nameVal,
+          username: userVal,
+          email: emailVal,
+          password: passVal
+        });
+        showSavedBanner(profileSavedMsg, "Profile details saved successfully!");
+      });
+
+      const presetList = [
+        { label: "Ocean Blue", value: "linear-gradient(135deg, #1e3a8a, #0284c7)" },
+        { label: "Emerald Mist", value: "linear-gradient(135deg, #065f46, #0d9488)" },
+        { label: "Midnight Slate", value: "linear-gradient(135deg, #0f172a, #1e293b)" },
+        { label: "Royal Violet", value: "linear-gradient(135deg, #4c1d95, #2563eb)" },
+        { label: "Warm Sand", value: "#efeae2" }
+      ];
+
+      function renderWallpaperPresets() {
+        const fresh = ZynkStorage.getUserById(currentUser.user_id) || currentUser;
+        wallpaperPresets.innerHTML = "";
+        presetList.forEach((p) => {
+          const card = document.createElement("div");
+          card.className = "wp-swatch" + (fresh.wallpaper_url === p.value ? " selected" : "");
+          card.style.background = p.value;
+          card.textContent = p.label;
+          card.addEventListener("click", () => {
+            ZynkStorage.updateUser(currentUser.user_id, { wallpaper_url: p.value });
+            renderWallpaperPresets();
+            showSavedBanner(wallpaperSavedMsg, "Wallpaper updated to " + p.label + "!");
+          });
+          wallpaperPresets.appendChild(card);
+        });
+      }
+
+      wallpaperFileInput.addEventListener("change", () => {
+        const file = wallpaperFileInput.files && wallpaperFileInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          ZynkStorage.updateUser(currentUser.user_id, { wallpaper_url: reader.result });
+          renderWallpaperPresets();
+          showSavedBanner(wallpaperSavedMsg, "Custom image wallpaper applied!");
+        };
+        reader.readAsDataURL(file);
+      });
+
+      resetWallpaperBtn.addEventListener("click", () => {
+        ZynkStorage.updateUser(currentUser.user_id, { wallpaper_url: "default" });
+        renderWallpaperPresets();
+        showSavedBanner(wallpaperSavedMsg, "Default chat background restored.");
+      });
+
+      savePinBtn.addEventListener("click", () => {
+        ZynkAuth.setFieldError(appLockPinInput, appLockPinError, "");
+        const pin = appLockPinInput.value.trim();
+        if (!/^\d{4}$/.test(pin)) {
+          ZynkAuth.setFieldError(appLockPinInput, appLockPinError, "Enter a valid 4-digit numeric PIN.");
+          return;
+        }
+        ZynkStorage.updateUser(currentUser.user_id, { app_lock_pin: pin });
+        const sess = ZynkStorage.getSession() || { user_id: currentUser.user_id };
+        ZynkStorage.setSession({ ...sess, unlocked_pin: true });
+        showSavedBanner(pinSavedMsg, "4-Digit AppLock PIN saved!");
+      });
+
+      disablePinBtn.addEventListener("click", () => {
+        ZynkStorage.updateUser(currentUser.user_id, { app_lock_pin: "" });
+        appLockPinInput.value = "";
+        showSavedBanner(pinSavedMsg, "AppLock PIN disabled.");
+      });
+
+      document.getElementById("settingsLogoutBtn").addEventListener("click", () => {
+        ZynkAuth.logout();
+      });
+
+      loadUserFields();
+      renderWallpaperPresets();
+    });
+  </script>
+
+  <script>
+  (function () {
+    var btn = document.getElementById("themeToggleBtn");
+    var saved = localStorage.getItem("zynk_theme_v1") || "light";
+    document.documentElement.setAttribute("data-theme", saved);
+
+    function setThemeIcon(theme) {
+      if (!btn) return;
+      var icon = btn.querySelector(".toggle-icon");
+      if (icon) icon.textContent = theme === "dark" ? "☾" : "☀";
+    }
+
+    setThemeIcon(saved);
+    if (!btn) return;
+
+    btn.onclick = function (e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      var current = document.documentElement.getAttribute("data-theme") || "light";
+      var next = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("zynk_theme_v1", next);
+      setThemeIcon(next);
+    };
+  })();
+</script>
+</body>
+</html>
